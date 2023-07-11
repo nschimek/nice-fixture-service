@@ -14,6 +14,7 @@ import (
 )
 
 const (
+	configFile = "./config/default.yaml"
 	host = "localhost"
 	port = 8080
 )
@@ -22,12 +23,6 @@ func main() {
 	core.Log.Info("Starting server...")
 
 	router := gin.Default()
-
-	router.GET("/api/v1/test", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"hello": "world",
-		})
-	})
 
 	srv := &http.Server{
 		Addr: fmt.Sprintf("%s:%d", host, port),
@@ -54,4 +49,9 @@ func main() {
 	if err := srv.Shutdown(ctx); err != nil {
 		core.Log.Fatalf("Server forced to shutdown due to error: %v", err)
 	}
+}
+
+func init() {
+	core.SetupViper()
+	core.Setup(configFile)
 }

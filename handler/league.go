@@ -31,10 +31,9 @@ func (h *league) GetByParams(c *gin.Context) {
 		return
 	}
 
-	r, err := h.svc.GetByParams(p)
-	if err != nil {
+	if r, err := h.svc.GetByParams(p); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	} else {
+		c.JSON(http.StatusOK, r)
 	}
-	c.JSON(http.StatusOK, r)
 }

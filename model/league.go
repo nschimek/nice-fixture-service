@@ -1,5 +1,9 @@
 package model
 
+type LeagueParams struct {
+	Season int `form:"season" binding:"omitempty,gte=2008,lte=9999"`
+}
+
 type League struct {
 	Id   int    `json:"id" gorm:"primaryKey"`
 	Name string `json:"name"`

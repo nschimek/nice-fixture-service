@@ -7,7 +7,7 @@ import (
 
 type League interface {
 	GetAll() ([]model.League, error)
-	GetAllBySeason(season int) ([]model.League, error)
+	GetAllBySeason(season *model.LeagueSeason) ([]model.League, error)
 }
 
 type league struct {
@@ -26,9 +26,9 @@ func (r *league) GetAll() ([]model.League, error) {
 	return leagues, nil
 }
 
-func (r *league) GetAllBySeason(season int) ([]model.League, error) {
+func (r *league) GetAllBySeason(season *model.LeagueSeason) ([]model.League, error) {
 	var leagues []model.League
-	if err := r.db.InnerJoin("LeagueSeason", &model.LeagueSeason{Season: season}, leagues).Error; err != nil {
+	if err := r.db.InnerJoin("LeagueSeason", season, leagues).Error; err != nil {
 		return nil, err
 	}
 	return leagues, nil

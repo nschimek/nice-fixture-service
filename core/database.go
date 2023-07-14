@@ -29,6 +29,7 @@ type Database interface {
 	FindByQuery(dest interface{}, query string, binds ...interface{}) DatabaseResult
 	InnerJoin(dest interface{}, joinTable string, query interface{}) DatabaseResult
 	Preload(dest interface{}, where interface{}, joinField string, joinWhere interface{}) DatabaseResult
+	GroupBy(dest interface{}, model interface{}, selectFields string, groupBy string) DatabaseResult
 	Gorm() *gorm.DB
 }
 
@@ -93,6 +94,10 @@ func (db *database) InnerJoin(dest interface{}, joinTable string, query interfac
 
 func (db *database) Preload(dest interface{}, where interface{}, joinField string, joinWhere interface{}) DatabaseResult {
 	return gormReturn(db.gorm.Preload(joinField, joinWhere).Find(dest, where))
+}
+
+func (db *database) GroupBy(dest interface{}, model interface{}, selectFields string, groupBy string) DatabaseResult {
+	return gormReturn(db.gorm.Model(model).Select(selectFields).Group(groupBy).Find(dest))
 }
 
 func (db *database) Gorm() *gorm.DB {

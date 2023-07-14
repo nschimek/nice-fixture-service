@@ -29,4 +29,7 @@ type LeagueSeason struct {
 }
 
 // for returning seasons with a group by query
-type Season int
+type Season struct {
+	Season int `json:"season"`
+	Current bool `json:"current"`
+}

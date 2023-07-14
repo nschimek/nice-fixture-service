@@ -2,6 +2,7 @@ package model
 
 type LeagueParams struct {
 	Season int `form:"season" binding:"omitempty,gte=2008,lte=9999"`
+	Current bool `form:"current" binding:"omitempty"`
 }
 
 type League struct {
@@ -20,9 +21,12 @@ type LeagueCountry struct {
 
 type LeagueSeason struct {
 	LeagueId int       `json:"-" gorm:"primaryKey"`
-	Season   int       `json:"season" gorm:"primaryKey"`
+	Season   int    		`json:"season" gorm:"primaryKey"`
 	Start    CivilTime `json:"start"`
 	End      CivilTime `json:"end"`
 	Current  bool      `json:"current"`
 	Audit    `json:"-"`
 }
+
+// for returning seasons with a group by query
+type Season int

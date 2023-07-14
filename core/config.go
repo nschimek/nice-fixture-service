@@ -12,6 +12,8 @@ var Cfg *Config
 
 type Config struct {
 	Debug         bool
+	Host string
+	Port int
 	Database configDatabase
 }
 

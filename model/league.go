@@ -9,7 +9,7 @@ type League struct {
 	Name string `json:"name"`
 	Type string `json:"type" gorm:"type:enum('league', 'cup');default:'league'"`
 	Country LeagueCountry  `json:"country" gorm:"embedded;embeddedPrefix:country_"`
-	Season LeagueSeason `json:"season"`
+	Seasons []LeagueSeason `json:"seasons" `
 	Audit   `json:"-"`
 }
 
@@ -20,7 +20,7 @@ type LeagueCountry struct {
 
 type LeagueSeason struct {
 	LeagueId int       `json:"-" gorm:"primaryKey"`
-	Season   int       `json:"year" gorm:"primaryKey"`
+	Season   int       `json:"season" gorm:"primaryKey"`
 	Start    CivilTime `json:"start"`
 	End      CivilTime `json:"end"`
 	Current  bool      `json:"current"`

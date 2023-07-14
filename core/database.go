@@ -25,9 +25,10 @@ type Database interface {
 	Save(value interface{}) DatabaseResult
 	GetById(id interface{}, dest interface{}) DatabaseResult
 	GetAll(dest interface{}) DatabaseResult
-	FindByStruct(dest interface{}, where interface{})
-	FindByQuery(dest interface{}, query string, binds ...interface{})
-	InnerJoin(joinTable string, dest interface{}, query interface{}) DatabaseResult
+	FindByStruct(dest interface{}, where interface{}) DatabaseResult
+	FindByQuery(dest interface{}, query string, binds ...interface{}) DatabaseResult
+	InnerJoin(dest interface{}, joinTable string, query interface{}) DatabaseResult
+	Gorm() *gorm.DB
 }
 
 type DatabaseResult struct {
@@ -82,11 +83,15 @@ func (db *database) FindByQuery(dest interface{}, query string, binds ...interfa
 	return gormReturn(db.gorm.Find(dest, query, binds))
 }
 
-func (db *database) InnerJoin(joinTable string, dest interface{}, where interface{}) DatabaseResult {
-	if where != nil {
-		return gormReturn(db.gorm.InnerJoins(joinTable, db.gorm.Where(where)).Find(dest))
+func (db *database) InnerJoin(dest interface{}, joinTable string, query interface{}) DatabaseResult {
+	if query != nil {
+		return gormReturn(db.gorm.InnerJoins(joinTable, db.gorm.Where(query)).Find(dest))
 	}
 	return gormReturn(db.gorm.InnerJoins(joinTable).Find(dest))
+}
+
+func (db *database) Gorm() *gorm.DB {
+	return db.gorm
 }
 
 func (db *database) connect() {

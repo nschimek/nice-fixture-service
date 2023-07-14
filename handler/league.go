@@ -12,15 +12,22 @@ import (
 
 const leagueEndpoint = "leagues"
 
+type League interface {
+	GetByParams(c *gin.Context)
+}
+
 type league struct {
 	gr *gin.Engine
 	svc service.League
 }
 
-func SetupLeague(gr *gin.Engine, svc service.League) {
-	h := &league{gr: gr, svc: svc}
+func setupLeague(gr *gin.Engine, svc service.League) {
+	bp := fmt.Sprintf("%s/%s", core.ApiBasePath, leagueEndpoint)
 
-	g := h.gr.Group(fmt.Sprintf("%s/%s", core.ApiBasePath, leagueEndpoint))
+	core.Log.WithField("path", bp).Debug("Setting up League Handler...")
+
+	h := &league{gr: gr, svc: svc}
+	g := h.gr.Group(bp)
 	g.GET("", h.GetByParams)
 }
 

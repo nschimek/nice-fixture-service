@@ -11,21 +11,25 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/nschimek/nice-fixture-service/core"
+	"github.com/nschimek/nice-fixture-service/handler"
+	"github.com/nschimek/nice-fixture-service/repository"
+	"github.com/nschimek/nice-fixture-service/service"
 )
 
 const (
 	configFile = "./config/default.yaml"
-	host = "localhost"
-	port = 8080
+)
+
+var (
+	services *service.ServiceRegistry
+	router *gin.Engine
 )
 
 func main() {
 	core.Log.Info("Starting server...")
 
-	router := gin.Default()
-
 	srv := &http.Server{
-		Addr: fmt.Sprintf("%s:%d", host, port),
+		Addr: fmt.Sprintf("%s:%d", core.Cfg.Host, core.Cfg.Port),
 		Handler: router,
 	}
 
@@ -54,4 +58,9 @@ func main() {
 func init() {
 	core.SetupViper()
 	core.Setup(configFile)
+
+	// setup repositories, services, and handlers: DB->repos->services->handlers (added to router)
+	repos := repository.Setup(core.DB)
+	services = service.Setup(repos)
+	router = handler.CreateRouter(services)
 }

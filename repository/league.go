@@ -5,6 +5,7 @@ import (
 	"github.com/nschimek/nice-fixture-service/model"
 )
 
+//go:generate mockery --name League --filename league_mock.go
 type League interface {
 	GetByIdRepository[model.League, int]
 	GetAllBySeason(season *model.LeagueSeason) ([]model.League, error)

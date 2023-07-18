@@ -31,10 +31,10 @@ func CreateRouter(svc *service.ServiceRegistry) *gin.Engine {
 // Given a Gin context, a result, and a potential error, add one of the following to the Gin context JSON response:
 //  - the result in JSON format along with a status 200 if the result is not nil
 //  - an error in JSON format along with a status of 404 if the result is nil
-//  - the error in JSON format as an internal server error w/status code 500 if error is not nil
-func jsonResult[T any](c *gin.Context, result *T, err error) {
+//  - the error in JSON format if its not nill
+func jsonResult[T any](c *gin.Context, result *T, err *rest_error.Error) {
 	if err != nil {
-		errorResult(c, rest_error.New(rest_error.Internal))
+		errorResult(c, err)
 	// the use of generics allows us to force a pointer, and now we can check for nil
 	} else if result == nil {
 		errorResult(c, rest_error.New(rest_error.NotFound))

@@ -35,10 +35,14 @@ func New(t ErrorType) *Error {
 	return errorMap[t]
 }
 
+// Returns a new Internal Server Error (500) with the given error if it's not nil.
 func NewInternal(err error) *Error {
-	e := errorMap[Internal]
-	e.Details = []string{err.Error()}
-	return e
+	if err != nil {
+		e := errorMap[Internal]
+		e.Details = []string{err.Error()}
+		return e
+	}
+	return nil
 }
 
 func NewWithDetail(t ErrorType, detail string) *Error {

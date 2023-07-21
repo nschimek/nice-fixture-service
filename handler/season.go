@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/nschimek/nice-fixture-service/core"
 	"github.com/nschimek/nice-fixture-service/model"
@@ -22,7 +20,7 @@ type season struct {
 }
 
 func setupSeason(gr *gin.Engine, svc service.Season) {
-	bp := fmt.Sprintf("%s/%s", core.ApiBasePath, seasonEndpoint)
+	bp := core.ApiPath(1, seasonEndpoint)
 
 	core.Log.WithField("path", bp).Debug("Setting up Season Handler...")
 

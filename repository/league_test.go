@@ -33,7 +33,7 @@ func (s *leagueTestSuite) TestGetByIdFound() {
 
 	res, err := s.repo.GetById(id)
 
-	s.mockDatabase.AssertCalled(s.T(), "GetById", id, &entity)
+	s.mockDatabase.AssertExpectations(s.T())
 	s.Equal(&entity, res)
 	s.Nil(err)
 }
@@ -46,7 +46,7 @@ func (s *leagueTestSuite) TestGetByIdError() {
 
 	res, err := s.repo.GetById(id)
 
-	s.mockDatabase.AssertCalled(s.T(), "GetById", id, &entity)
+	s.mockDatabase.AssertExpectations(s.T())
 	s.ErrorContains(err, "test")
 	s.Nil(res)
 }
@@ -59,7 +59,7 @@ func (s *leagueTestSuite) TestGetByIdNotFound() {
 
 	res, err := s.repo.GetById(id)
 
-	s.mockDatabase.AssertCalled(s.T(), "GetById", id, &entity)
+	s.mockDatabase.AssertExpectations(s.T())
 	s.Nil(res)
 	s.Nil(err)
 }
@@ -72,7 +72,7 @@ func (s *leagueTestSuite) TestGetAllBySeason() {
 
 	res, err := s.repo.GetAllBySeason(season)
 
-	s.mockDatabase.AssertCalled(s.T(), "Preload", &entities, nil, "Seasons", season)
+	s.mockDatabase.AssertExpectations(s.T())
 	s.Equal(entities, res)
 	s.Nil(err)
 }

@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/nschimek/nice-fixture-service/core"
 	"github.com/nschimek/nice-fixture-service/model"
@@ -22,7 +20,7 @@ type league struct {
 }
 
 func setupLeague(gr *gin.Engine, svc service.League) {
-	bp := fmt.Sprintf("%s/%s", core.ApiBasePath, leagueEndpoint)
+	bp := core.ApiPath(1, leagueEndpoint)
 
 	core.Log.WithField("path", bp).Debug("Setting up League Handler...")
 

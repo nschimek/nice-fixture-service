@@ -7,29 +7,25 @@ import (
 	"github.com/nschimek/nice-fixture-service/service"
 )
 
-const seasonEndpoint = "seasons"
+const seasonEndpoint = "/seasons"
 
 type Season interface {
-	GetByParams(c *gin.Context)
-	GetById(id int)
+	GetAll(c *gin.Context)
 }
 
 type season struct {
-	gr *gin.Engine
 	svc service.Season
 }
 
-func setupSeason(gr *gin.Engine, svc service.Season) {
-	bp := core.ApiPath(1, seasonEndpoint)
+func setupSeason(rg *gin.RouterGroup, svc service.Season) {
+	core.Log.Debug("Setting up Season Handler...")
 
-	core.Log.WithField("path", bp).Debug("Setting up Season Handler...")
-
-	h := &season{gr: gr, svc: svc}
-	g := h.gr.Group(bp)
+	h := &season{svc: svc}
+	g := rg.Group(seasonEndpoint)
 	g.GET("", h.GetAll)
 }
 
 func (h *season) GetAll(c *gin.Context) {
 	r, err := h.svc.GetAll()
-	jsonResult[[]model.Season](c, &r, err)
+	jsonResult[[]model.Season](c.JSON, &r, err)
 }

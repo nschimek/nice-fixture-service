@@ -14,9 +14,9 @@ var (
 	apiBasePath = "api"
 )
 
-// Prefixes an endpoint with /api/v<version>
-func ApiPath(version int, endpoint string) string {
-	return fmt.Sprintf("/%s/v%d/%s", apiBasePath, version, endpoint)
+// Generates an API base path with the version appended (ex: /api/v1)
+func ApiBasePath(version int) string {
+	return fmt.Sprintf("/%s/v%d", apiBasePath, version)
 }
 
 func Setup(configFile string) {

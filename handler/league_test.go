@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nschimek/nice-fixture-service/core"
 	"github.com/nschimek/nice-fixture-service/model"
 	"github.com/nschimek/nice-fixture-service/model/rest_error"
 	"github.com/nschimek/nice-fixture-service/service/mocks"
@@ -33,7 +34,7 @@ func (s *leagueHandlerTestSuite) SetupTest() {
 		{Id: 152, Name: "La Liga", Seasons: []model.LeagueSeason{{LeagueId: 39, Season: 2022, Current: true}}},
 		{Id: 210, Name: "Serie A", Seasons: []model.LeagueSeason{{LeagueId: 39, Season: 2022, Current: true}}},
 	}
-	setupLeague(s.router, s.mockService)
+	setupLeague(s.router.Group(core.ApiBasePath(1)), s.mockService)
 }
 
 func (s *leagueHandlerTestSuite) TestGetByParams() {

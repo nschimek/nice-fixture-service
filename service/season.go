@@ -6,6 +6,7 @@ import (
 	"github.com/nschimek/nice-fixture-service/repository"
 )
 
+//go:generate mockery --name Season --filename season_mock.go
 type Season interface {
 	GetAll() ([]model.Season, *rest_error.Error)
 }

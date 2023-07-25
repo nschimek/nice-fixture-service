@@ -35,6 +35,11 @@ func New(t ErrorType) *Error {
 	return errorMap[t]
 }
 
+// Returns a new Not Found (404) error
+func NewNotFound() *Error {
+	return errorMap[NotFound]
+}
+
 // Returns a new Internal Server Error (500) with the given error if it's not nil.
 func NewInternal(err error) *Error {
 	if err != nil {
@@ -43,6 +48,10 @@ func NewInternal(err error) *Error {
 		return e
 	}
 	return nil
+}
+
+func NewBadRequest(details ...string) *Error {
+	return NewWithDetails(BadRequest, details)
 }
 
 func NewWithDetail(t ErrorType, detail string) *Error {

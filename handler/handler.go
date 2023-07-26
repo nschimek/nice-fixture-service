@@ -45,7 +45,7 @@ func jsonResult[T any](jsonResponseFunc func(code int, obj any), result *T, err 
 	}
 }
 
-// Perform binding validation on the given params using the given binding function.
+// Perform binding validation on the given params using the given binding function (from gin.Context)
 // Returns true if validation passes, and false if it does not.  
 // Also handles the error using the JSON func if the validation fails.
 func bind(jsonResponseFunc func(code int, obj any), bindingFunc func(obj any) error, params any) bool {
@@ -65,7 +65,6 @@ func bind(jsonResponseFunc func(code int, obj any), bindingFunc func(obj any) er
 	}
 	return true
 }
-
 
 // Handle the REST error with the JSON Handler function
 func errorResult(jsonResponseFunc func(code int, obj any), err *rest_error.Error) {

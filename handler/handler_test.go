@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"testing"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/nschimek/nice-fixture-service/handler/mocks"
 	"github.com/nschimek/nice-fixture-service/model"
 	"github.com/nschimek/nice-fixture-service/model/rest_error"
@@ -28,8 +30,8 @@ func (s *handlerTestSuite) SetupTest() {
 func (s *handlerTestSuite) TestSetupRouter() {
 	res := CreateRouter(&service.ServiceRegistry{League: &svc_mocks.League{}, Season: &svc_mocks.Season{}})
 
-	s.Equal("/", res.RouterGroup.BasePath())
 	s.NotNil(res)
+	s.Equal("/", res.RouterGroup.BasePath())
 }
 
 func (s *handlerTestSuite) TestJsonResult() {
@@ -56,4 +58,54 @@ func (s *handlerTestSuite) TestJsonResultNil() {
 
 	s.Equal(exp.Code, m.Code)
 	s.Equal(exp, m.Obj)
+}
+
+func (s *handlerTestSuite) TestBind() {
+	bindFunc := func(obj any) error {
+		return nil
+	}
+	m := &mocks.MockResponse{}
+
+	// the params do not matter for this test because we are mocking the bind function
+	res := bind(m.JSON, bindFunc, &model.LeagueParams{})
+
+	s.True(res)
+	s.Nil(m.Obj)
+}
+
+func (s *handlerTestSuite) TestBindValidationErrors() {
+	bindFunc := func(obj any) error {
+		return &validator.ValidationErrors{
+			mocks.NewMockFieldError("gte=2008,lte=9999", "season", "2007"),
+			mocks.NewMockFieldError("required", "current", ""),
+		}
+	}
+	m := &mocks.MockResponse{}
+
+	// the params do not matter for this test because we are mocking the bind function
+	res := bind(m.JSON, bindFunc, &model.LeagueParams{})
+
+	exp := rest_error.NewBadRequest([]string{
+		"season [2007]: tag gte=2008,lte=9999 failed validation",
+		"current []: tag required failed validation",
+	}...)
+
+	s.False(res)
+	s.Equal(http.StatusBadRequest, m.Code)
+	s.Equal(exp, m.Obj)
+}
+
+func (s *handlerTestSuite) TestBindOtherError() {
+	err := errors.New("test")
+	bindFunc := func(obj any) error {
+		return err
+	}
+	m := &mocks.MockResponse{}
+
+	// the params do not matter for this test because we are mocking the bind function
+	res := bind(m.JSON, bindFunc, &model.LeagueParams{})
+
+	s.False(res)
+	s.Equal(http.StatusBadRequest, m.Code)
+	s.Equal(rest_error.NewBadRequest(err.Error()), m.Obj)
 }

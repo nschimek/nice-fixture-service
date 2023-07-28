@@ -46,7 +46,7 @@ func (s *leagueHandlerTestSuite) TestGetByParams() {
 
 	exp, _ := json.Marshal(s.leagues)
 
-	s.Equal(200, rr.Code)
+	s.Equal(http.StatusOK, rr.Code)
 	s.Equal(exp, rr.Body.Bytes())
 	s.mockService.AssertExpectations(s.T())
 }
@@ -56,7 +56,7 @@ func (s *leagueHandlerTestSuite) TestGetByParamsBindingError() {
 	req, _ := http.NewRequest(http.MethodGet, "/api/v1/leagues?season=asdf", nil)
 	s.router.ServeHTTP(rr, req)
 
-	s.Equal(400, rr.Code)
+	s.Equal(http.StatusBadRequest, rr.Code)
 	s.mockService.AssertExpectations(s.T())
 }
 
@@ -70,7 +70,7 @@ func (s *leagueHandlerTestSuite) TestGetByParamsServiceError() {
 
 	exp, _ := json.Marshal(re)
 
-	s.Equal(500, rr.Code)
+	s.Equal(http.StatusInternalServerError, rr.Code)
 	s.Equal(exp, rr.Body.Bytes())
 	s.mockService.AssertExpectations(s.T())
 }
@@ -84,7 +84,7 @@ func (s *leagueHandlerTestSuite) TestGetById() {
 
 	exp, _ := json.Marshal(s.leagues[0])
 
-	s.Equal(200, rr.Code)
+	s.Equal(http.StatusOK, rr.Code)
 	s.Equal(exp, rr.Body.Bytes())
 	s.mockService.AssertExpectations(s.T())
 }
@@ -94,7 +94,7 @@ func (s *leagueHandlerTestSuite) TestGetByIdBindingError() {
 	req, _ := http.NewRequest(http.MethodGet, "/api/v1/leagues/asdf", nil)
 	s.router.ServeHTTP(rr, req)
 
-	s.Equal(400, rr.Code)
+	s.Equal(http.StatusBadRequest, rr.Code)
 	s.mockService.AssertExpectations(s.T())
 }
 
@@ -106,7 +106,7 @@ func (s *leagueHandlerTestSuite) TestGetByIdNotFound() {
 
 	exp, _ := json.Marshal(rest_error.New(rest_error.NotFound))
 
-	s.Equal(404, rr.Code)
+	s.Equal(http.StatusNotFound, rr.Code)
 	s.Equal(exp, rr.Body.Bytes())
 	s.mockService.AssertExpectations(s.T())
 }

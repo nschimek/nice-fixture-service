@@ -5,6 +5,9 @@ import (
 	"github.com/nschimek/nice-fixture-service/model"
 )
 
+const seasonGroupBySelectSql = "season, max(current) as current"
+
+//go:generate mockery --name Season --filename season_mock.go
 type Season interface {
 	GetAll() ([]model.Season, error)
 }
@@ -19,7 +22,7 @@ func NewSeason(db core.Database) *season {
 
 func (r *season) GetAll() ([]model.Season, error) {
 	var seasons []model.Season
-	if err := r.db.GroupBy(&seasons, &model.LeagueSeason{}, "season, max(current) as current", "season").Error; err != nil {
+	if err := r.db.GroupBy(&seasons, &model.LeagueSeason{}, seasonGroupBySelectSql, "season").Error; err != nil {
 		return nil, err
 	}
 	return seasons, nil

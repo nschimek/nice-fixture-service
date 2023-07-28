@@ -5,6 +5,7 @@ import "github.com/nschimek/nice-fixture-service/core"
 type RepositoryRegistry struct {
 	League League
 	Season Season
+	Team Team
 }
 
 type repository struct {
@@ -20,6 +21,7 @@ func Setup(db core.Database) *RepositoryRegistry {
 	return &RepositoryRegistry{
 		League: NewLeague(db),
 		Season: NewSeason(db),
+		Team: NewTeam(db),
 	}
 }
 

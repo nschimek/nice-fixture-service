@@ -17,9 +17,8 @@ type league struct {
 }
 
 func NewLeague(db core.Database) *league {
-	r := newRepo(db)
 	return &league{
-		getByIdRepository: getByIdRepository[model.League, int]{repository: r},
+		getByIdRepository: getByIdRepository[model.League, int]{repository: newRepo(db)},
 		db: db,
 	}
 }

@@ -11,6 +11,8 @@ import (
 	"github.com/nschimek/nice-fixture-service/service"
 )
 
+const idBindPath = "/:id"
+
 type idParam struct {
 	ID int `uri:"id" binding:"required,gt=0"` 
 }
@@ -24,6 +26,7 @@ func CreateRouter(svc *service.ServiceRegistry) *gin.Engine {
 	// setup each handler by adding it to the router group
 	setupLeague(v1, svc.League)
 	setupSeason(v1, svc.Season)
+	setupTeam(v1, svc.Team)
 
 	return router
 }

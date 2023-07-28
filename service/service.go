@@ -8,6 +8,7 @@ import (
 type ServiceRegistry struct {
 	League League
 	Season Season
+	Team Team
 }
 
 func Setup(repos *repository.RepositoryRegistry) *ServiceRegistry {
@@ -15,5 +16,6 @@ func Setup(repos *repository.RepositoryRegistry) *ServiceRegistry {
 	return &ServiceRegistry{
 		League: NewLeague(repos.League),
 		Season: NewSeason(repos.Season),
+		Team: NewTeam(repos.Team),
 	}
 }

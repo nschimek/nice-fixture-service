@@ -7,40 +7,41 @@ import (
 	"github.com/nschimek/nice-fixture-service/service"
 )
 
-const leagueEndpoint = "/leagues"
+const teamEndpoint = "/teams"
 
-type League interface {
+type Team interface {
 	GetByParams(c *gin.Context)
 	GetById(c *gin.Context)
 }
 
-type league struct {
-	svc service.League
+type team struct {
+	svc service.Team
 }
 
-func setupLeague(rg *gin.RouterGroup, svc service.League) {
-	core.Log.Debug("Setting up League Handler...")
+func setupTeam(rg *gin.RouterGroup, svc service.Team) {
+	core.Log.Debug("Setting up Team Handler...")
 
-	h := &league{svc: svc}
-	g := rg.Group(leagueEndpoint)
+	h := &team{svc: svc}
+	g := rg.Group(teamEndpoint)
+
 	g.GET("", h.GetByParams)
 	g.GET(idBindPath, h.GetById)
 }
 
-func (h *league) GetByParams(c *gin.Context) {
-	p := model.LeagueParams{}
+func (h *team) GetByParams(c *gin.Context) {
+	p := model.TeamParams{}
 	if ok := bind(c.JSON, c.ShouldBind, &p); !ok {
-		return 
+		return
 	}
 	r, err := h.svc.GetByParams(p)
-	jsonResult[[]model.League](c.JSON, &r, err)
+	jsonResult[[]model.Team](c.JSON, &r, err)
 }
 
-func (h *league) GetById(c *gin.Context) {
+func (h *team) GetById(c *gin.Context) {
 	p := idParam{}
 	if ok := bind(c.JSON, c.ShouldBindUri, &p); !ok {
 		return
 	}
 	r, err := h.svc.GetById(p.ID)
-	jsonResult[model.League](c.JSON, r, err)
+	jsonResult[model.Team](c.JSON, r, err)
 }

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/nschimek/nice-fixture-service/core"
 	"github.com/nschimek/nice-fixture-service/model"
 	"github.com/nschimek/nice-fixture-service/model/rest_error"
 	"github.com/nschimek/nice-fixture-service/repository"
@@ -21,8 +20,11 @@ func NewTeam(repo repository.Team) *team {
 }
 
 func (s *team) GetByParams(params model.TeamParams) ([]model.Team, *rest_error.Error) {
-	if r, err := s.repo.GetAllByLeagueSeason(&model.TeamLeagueSeason{Season: params.Season, LeagueId: params.LeagueId}); err == nil {
-		return core.OnlyPopulatedChildren[model.Team, model.TeamLeagueSeason](r, func(p model.Team) []model.TeamLeagueSeason {
+	if r, err := s.repo.GetAllByLeagueSeason(&model.TeamLeagueSeason{
+			Season: params.Season, 
+			LeagueId: params.LeagueId,
+		}); err == nil {
+		return OnlyPopulatedChildren[model.Team, model.TeamLeagueSeason](r, func(p model.Team) []model.TeamLeagueSeason {
 			return p.TeamLeagueSeasons
 		}), nil
 	} else {

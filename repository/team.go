@@ -5,6 +5,9 @@ import (
 	"github.com/nschimek/nice-fixture-service/model"
 )
 
+const teamLeagueSeasons = "TeamLeagueSeasons"
+
+//go:generate mockery --name Team --filename team_mock.go
 type Team interface {
 	GetByIdRepository[model.Team, int]
 	GetAllByLeagueSeason(tls *model.TeamLeagueSeason) ([]model.Team, error)
@@ -24,7 +27,7 @@ func NewTeam(db core.Database) *team {
 
 func (r *team) GetAllByLeagueSeason(tls *model.TeamLeagueSeason) ([]model.Team, error) {
 	var teams []model.Team
-	if err := r.db.Preload(&teams, nil, "TeamLeagueSeasons", tls).Error; err != nil {
+	if err := r.db.Preload(&teams, nil, teamLeagueSeasons, tls).Error; err != nil {
 		return nil, err
 	}
 	return teams, nil

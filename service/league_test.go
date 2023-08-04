@@ -60,7 +60,7 @@ func (s *leagueServiceTestSuite) TestGetById() {
 
 	res, err := s.service.GetById(id)
 
-	s.Equal(s.leagues[0], res)
+	s.Equal(&s.leagues[0], res)
 	s.Nil(err)
 }
 

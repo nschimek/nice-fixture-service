@@ -1,4 +1,4 @@
-package core
+package service
 
 func OnlyPopulatedChildren[P any, C any](parents []P, getChildrenFunc func(parent P) []C) []P {
 	o := []P{}

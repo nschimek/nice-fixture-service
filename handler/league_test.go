@@ -104,7 +104,7 @@ func (s *leagueHandlerTestSuite) TestGetByIdNotFound() {
 	req, _ := http.NewRequest(http.MethodGet, "/api/v1/leagues/39", nil)
 	s.router.ServeHTTP(rr, req)
 
-	exp, _ := json.Marshal(rest_error.New(rest_error.NotFound))
+	exp, _ := json.Marshal(rest_error.NewNotFound())
 
 	s.Equal(http.StatusNotFound, rr.Code)
 	s.Equal(exp, rr.Body.Bytes())

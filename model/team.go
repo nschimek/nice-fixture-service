@@ -2,7 +2,7 @@ package model
 
 type TeamParams struct {
 	Season int `form:"season" binding:"omitempty,gte=2008,lte=9999"`
-	LeagueId int `form:"league" binding:"omitempty,gte=1"`
+	League int `form:"league" binding:"omitempty,gte=1"`
 }
 
 type Team struct {

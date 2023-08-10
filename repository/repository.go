@@ -6,6 +6,7 @@ type RepositoryRegistry struct {
 	League League
 	Season Season
 	Team Team
+	Fixture Fixture
 }
 
 type repository struct {
@@ -22,6 +23,7 @@ func Setup(db core.Database) *RepositoryRegistry {
 		League: NewLeague(db),
 		Season: NewSeason(db),
 		Team: NewTeam(db),
+		Fixture: NewFixture(db),
 	}
 }
 

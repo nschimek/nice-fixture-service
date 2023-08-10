@@ -27,6 +27,7 @@ func CreateRouter(svc *service.ServiceRegistry) *gin.Engine {
 	setupLeague(v1, svc.League)
 	setupSeason(v1, svc.Season)
 	setupTeam(v1, svc.Team)
+	setupFixture(v1, svc.Fixture)
 
 	return router
 }

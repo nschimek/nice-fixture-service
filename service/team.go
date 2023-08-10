@@ -21,16 +21,19 @@ func NewTeam(repo repository.Team) *team {
 }
 
 func (s *team) GetByParams(params model.TeamParams) ([]model.Team, *rest_error.Error) {
-	if r, err := s.repo.GetAllByLeagueSeason(&model.TeamLeagueSeason{
+	var teams []model.Team
+	var err error
+
+	if params == (model.TeamParams{}) {
+		teams, err = s.repo.GetAll()
+	} else {
+		teams, err = s.repo.GetAllByLeagueSeason(&model.TeamLeagueSeason{
 			Season: params.Season, 
 			LeagueId: params.League,
-		}); err == nil {
-		return OnlyPopulatedChildren[model.Team, model.TeamLeagueSeason](r, func(p model.Team) []model.TeamLeagueSeason {
-			return p.TeamLeagueSeasons
-		}), nil
-	} else {
-		return nil, rest_error.NewInternal(err)
+		})
 	}
+	
+	return teams, rest_error.NewInternal(err)
 }
 
 func (s *team) GetById(id int) (*model.Team, *rest_error.Error) {

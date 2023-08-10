@@ -51,11 +51,35 @@ func (s *teamTestSuite) TestGetByIdError() {
 	s.ErrorContains(err, "test")
 }
 
+func (s *teamTestSuite) TestGetAll() {
+	var entities []model.Team
+	
+	s.mockDatabase.EXPECT().GetAll(&entities).Return(core.DatabaseResult{RowsAffected: 3})
+	
+	res, err := s.repo.GetAll()
+	
+	s.mockDatabase.AssertExpectations(s.T())
+	s.Equal(entities, res)
+	s.Nil(err)
+}
+
+func (s *teamTestSuite) TestGetAllError() {
+	var entities []model.Team
+
+	s.mockDatabase.EXPECT().GetAll(&entities).Return(core.DatabaseResult{Error: errors.New("test")})
+
+	res, err := s.repo.GetAll()
+
+	s.mockDatabase.AssertExpectations(s.T())
+	s.Nil(res)
+	s.ErrorContains(err, "test")
+}
+
 func (s *teamTestSuite) TestGetAllByTLS() {
 	var entities []model.Team
 	tls := &model.TeamLeagueSeason{Season: 1, LeagueId: 1}
 
-	s.mockDatabase.EXPECT().Preload(&entities, nil, teamLeagueSeasons, tls).Return(core.DatabaseResult{RowsAffected: 3})
+	s.mockDatabase.EXPECT().InnerJoin(&entities, "LeagueSeason", tls).Return(core.DatabaseResult{RowsAffected: 3})
 	
 	res, err := s.repo.GetAllByLeagueSeason(tls)
 	
@@ -68,7 +92,7 @@ func (s *teamTestSuite) TestGetAllByTLSError() {
 	var entities []model.Team
 	tls := &model.TeamLeagueSeason{Season: 1, LeagueId: 1}
 
-	s.mockDatabase.EXPECT().Preload(&entities, nil, teamLeagueSeasons, tls).Return(core.DatabaseResult{Error: errors.New("test")})
+	s.mockDatabase.EXPECT().InnerJoin(&entities, "LeagueSeason", tls).Return(core.DatabaseResult{Error: errors.New("test")})
 
 	res, err := s.repo.GetAllByLeagueSeason(tls)
 

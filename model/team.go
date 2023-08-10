@@ -11,7 +11,7 @@ type Team struct {
 	Code string `json:"code"`
 	Country string `json:"country"`
 	National bool `json:"national"`
-	TeamLeagueSeasons []TeamLeagueSeason `json:"leagueSeasons"`
+	LeagueSeason *TeamLeagueSeason `json:"leagueSeason"`
 }
 
 type TeamLeagueSeason struct {

@@ -25,9 +25,9 @@ func (s *teamTestSuite) SetupTest() {
 	s.mockRepository = &mocks.Team{}
 	s.service = NewTeam(s.mockRepository)
 	s.teams = []model.Team{
-		{Id: 1, Name: "Team 1", TeamLeagueSeasons: []model.TeamLeagueSeason{{LeagueId: 1, Season: 2022}}},
-		{Id: 2, Name: "Team 2", TeamLeagueSeasons: []model.TeamLeagueSeason{{LeagueId: 2, Season: 2022}}},
-		{Id: 3, Name: "Team 3", TeamLeagueSeasons: []model.TeamLeagueSeason{}},
+		{Id: 1, Name: "Team 1", LeagueSeason: &model.TeamLeagueSeason{LeagueId: 1, Season: 2022}},
+		{Id: 2, Name: "Team 2", LeagueSeason: &model.TeamLeagueSeason{LeagueId: 2, Season: 2022}},
+		{Id: 3, Name: "Team 3", LeagueSeason: &model.TeamLeagueSeason{LeagueId: 3, Season: 2022}},
 	}
 }
 
@@ -37,16 +37,36 @@ func (s *teamTestSuite) TestGetByParams() {
 
 	res, err := s.service.GetByParams(p)
 
-	s.Contains(res, s.teams[0])
-	s.Contains(res, s.teams[1])
-	s.NotContains(res, s.teams[2])
+	s.ElementsMatch(res, s.teams)
 	s.Nil(err)
 }
 
 func (s *teamTestSuite) TestGetByParamsError() {
 	te := rest_error.NewInternal(errors.New("test"))
+	p := model.TeamParams{Season: 2022}
+	s.mockRepository.EXPECT().GetAllByLeagueSeason(&model.TeamLeagueSeason{Season: p.Season}).Return(nil, te)
+
+	res, err := s.service.GetByParams(p)
+
+	s.Nil(res)
+	s.Equal(te, err)
+}
+
+func (s *teamTestSuite) TestGetByParamsAll() {
 	p := model.TeamParams{}
-	s.mockRepository.EXPECT().GetAllByLeagueSeason(&model.TeamLeagueSeason{}).Return(nil, te)
+	s.mockRepository.EXPECT().GetAll().Return(s.teams, nil)
+
+	res, err := s.service.GetByParams(p)
+
+	s.ElementsMatch(res, s.teams)
+	s.Nil(err)
+}
+
+func (s *teamTestSuite) TestGetByParamsAllError() {
+	te := rest_error.NewInternal(errors.New("test"))
+	p := model.TeamParams{}
+
+	s.mockRepository.EXPECT().GetAll().Return(nil, te)
 
 	res, err := s.service.GetByParams(p)
 

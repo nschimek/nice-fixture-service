@@ -19,7 +19,7 @@ var (
 	fullSave = &gorm.Session{FullSaveAssociations: true}
 )
 
-//go:generate mockery --name Database
+//go:generate mockery --name Database --filename database_mock.go
 type Database interface {
 	Upsert(value interface{}) DatabaseResult
 	Save(value interface{}) DatabaseResult
@@ -28,6 +28,7 @@ type Database interface {
 	FindByStruct(dest interface{}, where interface{}) DatabaseResult
 	FindByQuery(dest interface{}, query string, binds ...interface{}) DatabaseResult
 	InnerJoin(dest interface{}, joinTable string, query interface{}) DatabaseResult
+	Join(dest interface{}, joinTable string, query interface{}) DatabaseResult
 	Preload(dest interface{}, where interface{}, joinField string, joinWhere interface{}) DatabaseResult
 	GroupBy(dest interface{}, model interface{}, selectFields string, groupBy string) DatabaseResult
 	Gorm() *gorm.DB
@@ -91,6 +92,14 @@ func (db *database) InnerJoin(dest interface{}, joinTable string, query interfac
 	}
 	return gormReturn(db.gorm.InnerJoins(joinTable).Find(dest))
 }
+
+func (db *database) Join(dest interface{}, joinTable string, query interface{}) DatabaseResult {
+	if query != nil {
+		return gormReturn(db.gorm.Joins(joinTable, db.gorm.Where(query)).Find(dest))
+	}
+	return gormReturn(db.gorm.Joins(joinTable).Find(dest))
+}
+
 
 func (db *database) Preload(dest interface{}, where interface{}, joinField string, joinWhere interface{}) DatabaseResult {
 	return gormReturn(db.gorm.Preload(joinField, joinWhere).Find(dest, where))

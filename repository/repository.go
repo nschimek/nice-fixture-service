@@ -42,3 +42,19 @@ func (r getByIdRepository[T, I]) GetById(id I) (*T, error) {
 	}
 	return &dest, nil
 }
+
+type GetAllRepository[T any] interface {
+	GetAll() ([]T, error)
+}
+
+type getAllRepository[T any] struct {
+	*repository
+}
+
+func (r getAllRepository[T]) GetAll() ([]T, error) {
+	var dest []T
+	if err := r.db.GetAll(&dest).Error; err != nil {
+		return nil, err
+	}
+	return dest, nil
+}

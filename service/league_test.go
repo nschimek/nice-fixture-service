@@ -25,9 +25,9 @@ func (s *leagueServiceTestSuite) SetupTest() {
 	s.mockRepository = &mocks.League{}
 	s.service = NewLeague(s.mockRepository)
 	s.leagues = []model.League{
-		{Id: 39, Name: "Premier League", Seasons: []model.LeagueSeason{{LeagueId: 39, Season: 2022, Current: true}}},
-		{Id: 40, Name: "La Liga"},
-		{Id: 41, Name: "Serie A", Seasons: []model.LeagueSeason{{LeagueId: 41, Season: 2022, Current: true}}},
+		{Id: 39, Name: "Premier League", Season: &model.LeagueSeason{LeagueId: 39, Season: 2022, Current: true}},
+		{Id: 40, Name: "La Liga", Season: &model.LeagueSeason{LeagueId: 40, Season: 2022, Current: true}},
+		{Id: 41, Name: "Serie A", Season: &model.LeagueSeason{LeagueId: 41, Season: 2022, Current: true}},
 	}
 }
 
@@ -37,22 +37,42 @@ func (s *leagueServiceTestSuite) TestGetByParams() {
 
 	res, err := s.service.GetByParams(p)
 
-	s.Contains(res, s.leagues[0])
-	s.NotContains(res, s.leagues[1]) // should not contain this element becuase it has no seasons
-	s.Contains(res, s.leagues[2])
+	s.ElementsMatch(res, s.leagues)
 	s.Nil(err)
 }
 
 func (s *leagueServiceTestSuite) TestGetByParamsError() {
 	te := rest_error.NewInternal(errors.New("test"))
-	p := model.LeagueParams{}
-	s.mockRepository.EXPECT().GetAllBySeason(&model.LeagueSeason{}).Return(nil, te)
+	p := model.LeagueParams{Season: 2022}
+	s.mockRepository.EXPECT().GetAllBySeason(&model.LeagueSeason{Season: 2022}).Return(nil, te)
 
 	res, err := s.service.GetByParams(p)
 
 	s.Nil(res)
 	s.Equal(te, err)
 }
+
+func (s *leagueServiceTestSuite) TestGetByParamsAll() {
+	p := model.LeagueParams{}
+	s.mockRepository.EXPECT().GetAll().Return(s.leagues, nil)
+
+	res, err := s.service.GetByParams(p)
+
+	s.ElementsMatch(res, s.leagues)
+	s.Nil(err)
+}
+
+func (s *leagueServiceTestSuite) TestGetByParamsAllError() {
+	te := rest_error.NewInternal(errors.New("test"))
+	p := model.LeagueParams{}
+	s.mockRepository.EXPECT().GetAll().Return(nil, te)
+
+	res, err := s.service.GetByParams(p)
+
+	s.Nil(res)
+	s.Equal(te, err)
+}
+
 
 func (s *leagueServiceTestSuite) TestGetById() {
 	id := 39

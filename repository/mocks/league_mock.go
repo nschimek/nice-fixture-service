@@ -20,6 +20,59 @@ func (_m *League) EXPECT() *League_Expecter {
 	return &League_Expecter{mock: &_m.Mock}
 }
 
+// GetAll provides a mock function with given fields:
+func (_m *League) GetAll() ([]model.League, error) {
+	ret := _m.Called()
+
+	var r0 []model.League
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]model.League, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() []model.League); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]model.League)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// League_GetAll_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAll'
+type League_GetAll_Call struct {
+	*mock.Call
+}
+
+// GetAll is a helper method to define mock.On call
+func (_e *League_Expecter) GetAll() *League_GetAll_Call {
+	return &League_GetAll_Call{Call: _e.mock.On("GetAll")}
+}
+
+func (_c *League_GetAll_Call) Run(run func()) *League_GetAll_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *League_GetAll_Call) Return(_a0 []model.League, _a1 error) *League_GetAll_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *League_GetAll_Call) RunAndReturn(run func() ([]model.League, error)) *League_GetAll_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetAllBySeason provides a mock function with given fields: season
 func (_m *League) GetAllBySeason(season *model.LeagueSeason) ([]model.League, error) {
 	ret := _m.Called(season)

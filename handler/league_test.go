@@ -30,9 +30,9 @@ func (s *leagueHandlerTestSuite) SetupTest() {
 	s.mockService = &mocks.League{}
 	s.router = gin.Default()
 	s.leagues = []model.League{
-		{Id: 39, Name: "Premier League", Seasons: []model.LeagueSeason{{LeagueId: 39, Season: 2022, Current: true}}},
-		{Id: 152, Name: "La Liga", Seasons: []model.LeagueSeason{{LeagueId: 39, Season: 2022, Current: true}}},
-		{Id: 210, Name: "Serie A", Seasons: []model.LeagueSeason{{LeagueId: 39, Season: 2022, Current: true}}},
+		{Id: 39, Name: "Premier League", Season: &model.LeagueSeason{LeagueId: 39, Season: 2022, Current: true}},
+		{Id: 152, Name: "La Liga", Season: &model.LeagueSeason{LeagueId: 39, Season: 2022, Current: true}},
+		{Id: 210, Name: "Serie A", Season: &model.LeagueSeason{LeagueId: 39, Season: 2022, Current: true}},
 	}
 	setupLeague(s.router.Group(core.ApiBasePath(1)), s.mockService)
 }

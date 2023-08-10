@@ -336,6 +336,50 @@ func (_c *Database_InnerJoin_Call) RunAndReturn(run func(interface{}, string, in
 	return _c
 }
 
+// Join provides a mock function with given fields: dest, joinTable, query
+func (_m *Database) Join(dest interface{}, joinTable string, query interface{}) core.DatabaseResult {
+	ret := _m.Called(dest, joinTable, query)
+
+	var r0 core.DatabaseResult
+	if rf, ok := ret.Get(0).(func(interface{}, string, interface{}) core.DatabaseResult); ok {
+		r0 = rf(dest, joinTable, query)
+	} else {
+		r0 = ret.Get(0).(core.DatabaseResult)
+	}
+
+	return r0
+}
+
+// Database_Join_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Join'
+type Database_Join_Call struct {
+	*mock.Call
+}
+
+// Join is a helper method to define mock.On call
+//   - dest interface{}
+//   - joinTable string
+//   - query interface{}
+func (_e *Database_Expecter) Join(dest interface{}, joinTable interface{}, query interface{}) *Database_Join_Call {
+	return &Database_Join_Call{Call: _e.mock.On("Join", dest, joinTable, query)}
+}
+
+func (_c *Database_Join_Call) Run(run func(dest interface{}, joinTable string, query interface{})) *Database_Join_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(interface{}), args[1].(string), args[2].(interface{}))
+	})
+	return _c
+}
+
+func (_c *Database_Join_Call) Return(_a0 core.DatabaseResult) *Database_Join_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Database_Join_Call) RunAndReturn(run func(interface{}, string, interface{}) core.DatabaseResult) *Database_Join_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Preload provides a mock function with given fields: dest, where, joinField, joinWhere
 func (_m *Database) Preload(dest interface{}, where interface{}, joinField string, joinWhere interface{}) core.DatabaseResult {
 	ret := _m.Called(dest, where, joinField, joinWhere)
@@ -377,48 +421,6 @@ func (_c *Database_Preload_Call) Return(_a0 core.DatabaseResult) *Database_Prelo
 }
 
 func (_c *Database_Preload_Call) RunAndReturn(run func(interface{}, interface{}, string, interface{}) core.DatabaseResult) *Database_Preload_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// Preload2 provides a mock function with given fields: dest
-func (_m *Database) Preload2(dest interface{}) core.DatabaseResult {
-	ret := _m.Called(dest)
-
-	var r0 core.DatabaseResult
-	if rf, ok := ret.Get(0).(func(interface{}) core.DatabaseResult); ok {
-		r0 = rf(dest)
-	} else {
-		r0 = ret.Get(0).(core.DatabaseResult)
-	}
-
-	return r0
-}
-
-// Database_Preload2_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Preload2'
-type Database_Preload2_Call struct {
-	*mock.Call
-}
-
-// Preload2 is a helper method to define mock.On call
-//   - dest interface{}
-func (_e *Database_Expecter) Preload2(dest interface{}) *Database_Preload2_Call {
-	return &Database_Preload2_Call{Call: _e.mock.On("Preload2", dest)}
-}
-
-func (_c *Database_Preload2_Call) Run(run func(dest interface{})) *Database_Preload2_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(interface{}))
-	})
-	return _c
-}
-
-func (_c *Database_Preload2_Call) Return(_a0 core.DatabaseResult) *Database_Preload2_Call {
-	_c.Call.Return(_a0)
-	return _c
-}
-
-func (_c *Database_Preload2_Call) RunAndReturn(run func(interface{}) core.DatabaseResult) *Database_Preload2_Call {
 	_c.Call.Return(run)
 	return _c
 }

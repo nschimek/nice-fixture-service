@@ -64,15 +64,52 @@ func (s *leagueTestSuite) TestGetByIdNotFound() {
 	s.Nil(err)
 }
 
+func (s *leagueTestSuite) TestGetAll() {
+	var entities []model.League
+	
+	s.mockDatabase.EXPECT().GetAll(&entities).Return(core.DatabaseResult{RowsAffected: 2})
+
+	res, err := s.repo.GetAll()
+
+	s.mockDatabase.AssertExpectations(s.T())
+	s.Equal(entities, res)
+	s.Nil(err)
+}
+
+func (s *leagueTestSuite) TestGetAllError() {
+	var entities []model.League
+
+	s.mockDatabase.EXPECT().GetAll(&entities).Return(core.DatabaseResult{Error: errors.New("test")})
+
+	res, err := s.repo.GetAll()
+
+	s.mockDatabase.AssertExpectations(s.T())
+	s.ErrorContains(err, "test")
+	s.Nil(res)
+}
+
 func (s *leagueTestSuite) TestGetAllBySeason() {
 	var entities []model.League
 	season := &model.LeagueSeason{Season: 2022}
 
-	s.mockDatabase.EXPECT().Preload(&entities, nil, "Seasons", season).Return(core.DatabaseResult{RowsAffected: 2})
+	s.mockDatabase.EXPECT().InnerJoin(&entities, "Season", season).Return(core.DatabaseResult{RowsAffected: 2})
 
 	res, err := s.repo.GetAllBySeason(season)
 
 	s.mockDatabase.AssertExpectations(s.T())
 	s.Equal(entities, res)
 	s.Nil(err)
+}
+
+func (s *leagueTestSuite) TestGetAllBySeasonError() {
+	var entities []model.League
+	season := &model.LeagueSeason{Season: 2022}
+
+	s.mockDatabase.EXPECT().InnerJoin(&entities, "Season", season).Return(core.DatabaseResult{Error: errors.New("test")})
+
+	res, err := s.repo.GetAllBySeason(season)
+
+	s.mockDatabase.AssertExpectations(s.T())
+	s.ErrorContains(err, "test")
+	s.Nil(res)
 }

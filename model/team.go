@@ -19,4 +19,5 @@ type TeamLeagueSeason struct {
 	LeagueId int `json:"leagueId" gorm:"primaryKey"`
 	Season int `json:"season" gorm:"primaryKey"`
 	MaxFixtureId int `json:"maxFixtureId"`
+	TeamStats *TeamStats `gorm:"foreignKey:TeamId,LeagueId,Season,FixtureId;references:TeamId,LeagueId,Season,MaxFixtureId" json:"maxFixtureStats"`
 }
